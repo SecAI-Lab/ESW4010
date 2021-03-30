@@ -2,10 +2,8 @@ We will use a Docker image for a buffer overflow experiment
 (If you have not used Docker before, it would be a good chance to get used to it). 
 Docker offers a platform to deliver varying software 
 in `containers`. 
-
 A container is an isolated process running on the host, 
 communicating with another container via a well-defined channel. 
-
 It differs from VM (virtual machine) in that Docker does not 
 consume much hardware resources (e.g., no guest OS), 
 enabling one to efficiently run services efficiently.
