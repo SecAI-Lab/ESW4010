@@ -66,21 +66,62 @@ $ docker build -t esw4010 .
  => => naming to docker.io/library/esw4010                                                                                                                                             0.0s
 ```
 
-Now you can see your own `esw4010` docker image. The image ID looks different in your machine.
+Now you see your own `esw4010` docker image. The image ID looks different in your machine.
 ```
 $ docker images
 REPOSITORY               TAG       IMAGE ID       CREATED         SIZE
 esw4010                  latest    be7f573f3f38   8 minutes ago   1GB
 ```
+
+Once complete, run your container for the first time.
+Here `-it` option represents `interactive` mode using `/bin/bash`. 
+You should be able to see the container id (e.g., 9622fd5a60f8) when running the container.
+By typing `exit` or with a `CTRL+D` key, you can exit the container.
+However, all changes made will be gone because an `--rm` option 
+will remove all jobs you've done upon exiting the container.
+```
+$ docker run --rm -it esw4010 /bin/bash
+root@9622fd5a60f8:/# exit
+```
+
+More practically, let us run our docker image without the `--rm` option.
+Now you will see a new container id (e.g., d8a574ada8a3).
+```
+$ docker run -it esw4010 /bin/bash
+root@d8a574ada8a3:/# cd ~
+root@d8a574ada8a3:~# ls -l
+total 4
+drwxr-xr-x 4 root root 4096 Mar 30 00:58 peda
+```
+
+If you want to keep running your container when getting out of the shell,
+press `CTRL + p + q` in order (one by one). You can check that the docker image is 
+still running with `docker ps`.
+```
+$ docker ps
+CONTAINER ID   IMAGE     COMMAND       CREATED          STATUS          PORTS     NAMES
+d8a574ada8a3   esw4010   "/bin/bash"   13 minutes ago   Up 13 minutes             relaxed_greider
+```
+
+If you want to go back to the container, use `docker exec` as follow. 
+Your changes will be valid as long as the container is running.
+```
+$ docker exec -it d8a574ada8a3 bash
+root@d8a574ada8a3:/# cd ~
+root@d8a574ada8a3:~# vi vul.c
+root@d8a574ada8a3:~# gcc -fno-stack-protector -z execstack -no-pie -o vul vul.c
+root@d8a574ada8a3:~# ls -l
+total 16
+drwxr-xr-x 4 root root 4096 Mar 30 00:58 peda
+-rwxr-xr-x 1 root root 7444 Apr  6 13:20 vul
+-rw-r--r-- 1 root root  340 Apr  6 13:19 vul.c
+root@d8a574ada8a3:~# file vul
+vul: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux.so.2, for GNU/Linux 2.6.32, BuildID[sha1]=2c5d66b5298692febd2f5a9a5ec2449862f40195, not stripped
+```
+
 You can find general command line references for Docker here:
 https://docs.docker.com/engine/reference/commandline/docker/
 
-Once complete, run your container for the first time.
-Here `-it` option represents `interactive` mode using `/bin/bash`, 
-and `--rm` option will remove all jobs you've done when exiting the container.
-```
-$ docker run --rm -it esw4010 /bin/bash
-```
 
 
 ### Writing your own exploit with a buffer overflow
@@ -120,5 +161,6 @@ Note that the shellcode in class was for `x86_64` thus you should use another fo
 
 * Your exploit: `exp.py`
 * Briefly explain how your exploit works inside your exploit code as comments
+* You may write up what you have done in detail
 * Answers for a few questions in homework assignment #2
 
