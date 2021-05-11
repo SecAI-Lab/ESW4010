@@ -21,7 +21,7 @@ RUN apt-get -y update && apt-get install -y \
     python-pip \
     gdb
 
-RUN pip install pyelftools pwntools
+RUN pip install pyelftools 
 RUN git clone https://github.com/longld/peda.git ~/peda
 RUN echo "source ~/peda/peda.py" >> ~/.gdbinit
 RUN echo "[ES4010] docker ready!"
