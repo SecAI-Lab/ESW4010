@@ -86,9 +86,11 @@ root@9622fd5a60f8:/# exit
 
 More practically, let us run our docker image without the `--rm` option.
 Now you will see a new container id (e.g., d8a574ada8a3).
+Note that we will turn off ASLR (i.e., randomize_va_space).
 ```
-$ docker run -it esw4010 /bin/bash
+$ docker run ---privileged -it esw4010 /bin/bash
 root@d8a574ada8a3:/# cd ~
+root@d8a574ada8a3:/# echo 0 > /proc/sys/kernel/randomize_va_space
 root@d8a574ada8a3:~# ls -l
 total 4
 drwxr-xr-x 4 root root 4096 Mar 30 00:58 peda
